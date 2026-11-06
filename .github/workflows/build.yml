@@ -1,0 +1,52 @@
+name: Build
+
+# Только сборка: workflow ничего не коммитит, не публикует и не создаёт релизы.
+# Результат — артефакт `pkg` (omm_core.js, omm_core_bg.wasm, omm-component.js).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: wasm-pack build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Rust / Cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build (release, web target)
+        run: wasm-pack build --release --target web --out-dir pkg
+
+      - name: Copy JS component into pkg/
+        run: cp js/omm-component.js pkg/
+
+      - name: Show pkg/ sizes
+        run: |
+          echo "=== pkg/ ==="
+          ls -lh pkg/
+
+      - name: Upload pkg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg
+          path: pkg/
+          retention-days: 7

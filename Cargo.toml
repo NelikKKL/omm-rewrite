@@ -1,0 +1,45 @@
+[package]
+name = "omm-core"
+version = "4.0.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Ultra-lightweight 3D model engine — Rust/WASM core (zero JS dependencies)"
+license = "MIT"
+authors = ["NelikKKL"]
+repository = "https://github.com/NelikKKL/OMM-model"
+readme = "README.md"
+keywords = ["3d", "wasm", "canvas", "model", "omm"]
+categories = ["wasm", "rendering", "graphics"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+# Ядро (парсер, байт-код, VM, камера, конвертеры) не имеет ни одной
+# зависимости и собирается/тестируется на обычной хост-платформе:
+#     cargo test
+# Зависимости нужны только для WASM-слоя (src/web.rs).
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+version = "0.3"
+features = [
+  "HtmlCanvasElement",
+  "HtmlImageElement",
+  "WebGl2RenderingContext",
+  "WebGlBuffer",
+  "WebGlProgram",
+  "WebGlShader",
+  "WebGlTexture",
+  "WebGlUniformLocation",
+  "WebGlVertexArrayObject",
+  "console",
+]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

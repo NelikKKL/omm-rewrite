@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OMM 4.0 — примеры</title>
+  <!-- Соберите проект: wasm-pack build --release --target web --out-dir pkg
+       cp js/omm-component.js pkg/
+       и запустите HTTP-сервер из корня репозитория: python3 -m http.server -->
+  <script type="module" src="../pkg/omm-component.js"></script>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; background: #f4f5f7; color: #222; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; max-width: 1100px; }
+    figure { margin: 0; background: #fff; border-radius: 10px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+    figcaption { margin-top: 8px; font-size: 14px; color: #555; }
+    omm-model { width: 100%; height: 300px; background: #eef0f4; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>OMM 4.0</h1>
+  <main>
+    <figure>
+      <omm-model autorate>
+        cube3
+        color(80, 140, 255)
+        scale(2)
+      </omm-model>
+      <figcaption>Модель прямо в теге, <code>autorate</code></figcaption>
+    </figure>
+
+    <figure>
+      <omm-model src="robot.omm" freer></omm-model>
+      <figcaption>Файл <code>robot.omm</code>: группа <code>mono()</code>, деформация, анимация. Мышь/тач — вращение, колесо/пинч — зум, ПКМ — сдвиг</figcaption>
+    </figure>
+
+    <figure>
+      <omm-model freer>
+        sphere3
+        color(80, 160, 255)
+        scale(2)
+        animation(y-100, y100)
+
+        cube3
+        color(255, 100, 80)
+        y(250)
+        rr(45)
+      </omm-model>
+      <figcaption>Анимация: шар ездит вверх-вниз</figcaption>
+    </figure>
+
+    <figure>
+      <omm-model autorate freer>
+        mesh3
+        verts(0 -80 0,  80 60 -60,  -80 60 -60,  0 60 80)
+        tris(0 1 2,  0 3 1,  0 2 3,  1 3 2)
+        color(220, 120, 60)
+      </omm-model>
+      <figcaption><code>mesh3</code>, заданный вручную (тетраэдр)</figcaption>
+    </figure>
+  </main>
+</body>
+</html>
