@@ -267,6 +267,8 @@ wasm-pack build --release --target web --out-dir pkg
 cp js/omm-component.js pkg/
 ```
 
+The WASM uses `bulk-memory` and saturating float→int conversions (modern Rust emits them by default; every current browser supports them) — the matching `wasm-opt` flags are already set in `Cargo.toml`.
+
 Checks:
 
 ```bash

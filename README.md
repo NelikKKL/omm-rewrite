@@ -307,7 +307,7 @@ wasm-pack build --release --target web --out-dir pkg
 cp js/omm-component.js pkg/
 ```
 
-Артефакты появятся в `pkg/`.
+Артефакты появятся в `pkg/`. Собранный WASM использует `bulk-memory` и saturating-преобразования float→int (их по умолчанию генерирует современный Rust; поддерживаются всеми актуальными браузерами) — нужные флаги для `wasm-opt` уже прописаны в `Cargo.toml`.
 
 Проверки:
 

@@ -42,4 +42,12 @@ opt-level = 3
 lto = true
 codegen-units = 1
 panic = "abort"
-strip = true
+# `strip = true` не используем: он удаляет секцию target_features, по которой
+# wasm-bindgen и wasm-opt узнают, какие возможности WASM использует код.
+
+# Современный Rust по умолчанию генерирует bulk-memory (memory.copy/fill) и
+# saturating float→int (trunc_sat) — их нужно явно разрешить для wasm-opt,
+# который идёт в комплекте с wasm-pack (иначе: «Bulk memory operations
+# require bulk memory»). Все актуальные браузеры эти возможности поддерживают.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O3", "--enable-bulk-memory", "--enable-nontrapping-float-to-int"]
